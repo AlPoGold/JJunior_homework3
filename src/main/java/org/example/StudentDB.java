@@ -12,6 +12,7 @@ public class StudentDB {
             findStudentByID(conn,5);
             findStudentByID(conn,15);
             updateAgeStudent(conn, 3, 56);
+            updateAgeStudent(conn, 78, 56);
             showTable(conn);
 
 
@@ -27,7 +28,8 @@ public class StudentDB {
                 WHERE id=$1""")){
             pstm.setInt(1, id);
             pstm.setInt(2, newAge);
-            pstm.execute();
+            int success = pstm.executeUpdate();
+            if(success==0)System.out.println("No such student with id: "+ id + ", or error in DB");
         }catch (SQLException e){
             e.printStackTrace();
         }
