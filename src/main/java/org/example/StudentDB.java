@@ -4,6 +4,30 @@ import java.sql.*;
 
 public class StudentDB {
     public static void main(String[] args) {
+        createH2DataBase();
+//        createMySQLDataBase();
+    }
+
+    private static void createMySQLDataBase() {
+        String user = "root";
+        String password = "sensitive_info";
+        try(Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/testGB", user, password)) {
+            createTable(connection);
+            insertDataToTable(connection);
+            showTable(connection);
+            findStudentByID(connection,5);
+            findStudentByID(connection,15);
+            updateAgeStudent(connection, 3, 56);
+            updateAgeStudent(connection, 78, 56);
+            showTable(connection);
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+
+    private static void createH2DataBase() {
         try(Connection conn = DriverManager.getConnection("jdbc:h2:mem:test")){
 
             createTable(conn);
