@@ -1,6 +1,8 @@
 package org.example;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.TypeVariable;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +60,38 @@ public class TableService {
         }
         System.out.println(sqlRequest);
         return sqlRequest.toString();
+    }
+
+    public static <T> Student findStudentById(int id, Connection connection){
+        Student student = null;
+
+        try{
+            String tableName = Student.class.getAnnotation(Table.class).name();
+            String sqlRequest = "SELECT * FROM " + tableName + " WHERE id="+ id;
+            PreparedStatement pstm = connection.prepareStatement(sqlRequest);
+
+            ResultSet res = pstm.executeQuery();
+            if(res!=null){
+                while(res.next()){
+                    String firstName = res.getString("first_name");
+                    String secondName = res.getString("second_name");
+                    int age = res.getInt("age");
+                    student = Student.class
+                            .getConstructor(int.class, String.class, String.class, int.class)
+                            .newInstance(id, firstName,secondName, age);
+                }
+
+
+
+            }else System.out.println("No such student with id:" +id);
+
+
+
+        }catch (SQLException | NoSuchMethodException |InvocationTargetException | InstantiationException | IllegalAccessException e){
+            System.out.println("Error in DB: "+ e.getMessage());
+        }
+
+        return student;
     }
 
     public static <T> void saveObject(T student, Connection connection){

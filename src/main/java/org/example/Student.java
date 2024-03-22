@@ -35,6 +35,9 @@ public class Student {
         TableService.showTable(connection);
 
 
+        Student student = TableService.findStudentById(2, connection);
+        System.out.println(student);
+
         TableService.close(connection);
 
 
@@ -74,5 +77,15 @@ public class Student {
 
     public int getId() {
         return id;
+    }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", secondName='" + secondName + '\'' +
+                ", age=" + age +
+                '}';
     }
 }
